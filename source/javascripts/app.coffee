@@ -1,7 +1,7 @@
 #= require '_lib'
 #= require_tree './_todomvc'
 
-class TodoApp extends Spine.Controller
+class TodoApp extends Exo.Spine.Controller
 	ENTER_KEY = 13
 
 	elements:
@@ -21,11 +21,15 @@ class TodoApp extends Spine.Controller
 
 	constructor: ->
 		super
-		Todo.bind 'create', @addNew
-		Todo.bind 'refresh change', @addAll
-		Todo.bind 'refresh change', @toggleElems
+
+		@list = new Exo.Spine.List
+			el: @todos
+			controller: TodoItem
+
+		Todo.bind 'refresh change', @renderList
 		Todo.bind 'refresh change', @renderFooter
 		Todo.fetch()
+
 		@routes
 			'/:filter': (param) ->
 				@filter = param.filter
@@ -35,6 +39,14 @@ class TodoApp extends Spine.Controller
 				Todo.trigger('refresh')
 				@filters.removeClass('selected')
 					.filter("[href='#/#{ @filter }']").addClass('selected');
+
+		@activate()
+
+	doActivate: ->
+		console.log @el
+		TweenLite.from @el, 1,
+			css:
+				rotation: 180
 
 	new: (e) ->
 		val = $.trim @newTodoInput.val()
@@ -51,13 +63,8 @@ class TodoApp extends Spine.Controller
 			else
 				Todo.all()
 
-	addNew: (todo) =>
-		view = new Todos todo: todo
-		@todos.append view.render().el
-
-	addAll: =>
-		@todos.empty()
-		@addNew todo for todo in @getByFilter()
+	renderList: =>
+		@list.render @getByFilter()
 
 	toggleAll: (e) ->
 		Todo.each (todo) ->
@@ -70,13 +77,6 @@ class TodoApp extends Spine.Controller
 
 	clearCompleted: ->
 		Todo.destroyCompleted()
-
-	toggleElems: =>
-		isTodos = !!Todo.count()
-		@main.toggle isTodos
-		@footer.toggle isTodos
-		@clearCompleted.toggle !!Todo.completed().length
-		@toggleAllElem.removeAttr 'checked' if !Todo.completed().length
 
 	renderFooter: =>
 		text = (count) -> if count is 1 then 'item' else 'items'

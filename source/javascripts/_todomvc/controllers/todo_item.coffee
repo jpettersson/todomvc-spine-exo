@@ -1,4 +1,4 @@
-class window.Todos extends Spine.Controller
+class window.TodoItem extends Exo.Spine.Controller
 	ENTER_KEY = 13
 
 	elements:
@@ -11,10 +11,10 @@ class window.Todos extends Spine.Controller
 		'keyup    .edit':    'finishEditOnEnter'
 		'blur     .edit':    'finishEdit'
 
-	constructor: ->
-		super
+	prepareWithModel: (model) ->
+		@todo = model
 		@todo.bind 'update', @render
-		@todo.bind 'destroy', @release
+		@render()
 
 	render: =>
 		@replace JST['_todomvc/views/item'](@todo)
@@ -37,3 +37,15 @@ class window.Todos extends Spine.Controller
 
 	finishEditOnEnter: (e) ->
 		@finishEdit() if e.which is ENTER_KEY
+
+	doActivate: ->
+		TweenLite.from @el, .2
+			css:
+				alpha: 0
+			onComplete: => @onActivated()
+
+	doDeactivate: ->
+		TweenLite.to @el, .2
+			css:
+				alpha: 0
+			onComplete: => @onDeactivated()
