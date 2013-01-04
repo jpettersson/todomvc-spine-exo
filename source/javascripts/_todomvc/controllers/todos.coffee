@@ -17,7 +17,7 @@ class window.Todos extends Spine.Controller
 		@todo.bind 'destroy', @release
 
 	render: =>
-		@replace TPL( @todo )
+		@replace JST['_todomvc/views/item'](@todo)
 		@
 
 	remove: ->
