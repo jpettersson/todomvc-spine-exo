@@ -1,4 +1,4 @@
-class window.Todo extends Spine.Model
+class Todo extends Spine.Model
 	@configure 'Todo', 'title', 'completed'
 	@extend Spine.Model.Local
 
@@ -13,3 +13,5 @@ class window.Todo extends Spine.Model
 
 	@destroyCompleted: ->
 		todo.destroy() for todo in @completed()
+
+module.exports = Todo

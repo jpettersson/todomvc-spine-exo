@@ -1,6 +1,9 @@
 #= require '_lib'
 #= require_tree './_todomvc'
 
+TodoItem = require '_todomvc/controllers/todo_item'
+Todo = require '_todomvc/models/todo'
+
 class TodoApp extends Exo.Spine.Controller
 	ENTER_KEY = 13
 
@@ -44,9 +47,10 @@ class TodoApp extends Exo.Spine.Controller
 
 	doActivate: ->
 		console.log @el
-		TweenLite.from @el, 1,
+		TweenLite.to @el, 1,
 			css:
-				rotation: 180
+				opacity: 1
+				marginTop: 130
 
 	new: (e) ->
 		val = $.trim @newTodoInput.val()

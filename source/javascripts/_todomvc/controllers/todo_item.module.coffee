@@ -1,4 +1,4 @@
-class window.TodoItem extends Exo.Spine.Controller
+class TodoItem extends Exo.Spine.Controller
 	ENTER_KEY = 13
 
 	elements:
@@ -49,3 +49,5 @@ class window.TodoItem extends Exo.Spine.Controller
 			css:
 				alpha: 0
 			onComplete: => @onDeactivated()
+
+module.exports = TodoItem
